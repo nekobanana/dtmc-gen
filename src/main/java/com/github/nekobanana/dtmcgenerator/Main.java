@@ -14,8 +14,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 public class Main {
@@ -29,7 +27,6 @@ public class Main {
         Option output = new Option("o", "output", true, "output folder (if not provided the program will use this folder)");
         output.setRequired(false);
         options.addOption(output);
-
 
         CommandLineParser parser = new DefaultParser();
 //        HelpFormatter formatter = new HelpFormatter();
@@ -47,7 +44,7 @@ public class Main {
             generatorConfig.setSeed(seed);
         }
         System.out.println("Seed: " + seed);
-        RandomUtils.rand.setSeed(seed);
+        RandomUtils.setSeed(seed);
 
         int matCounter = 0;
         for (DTMCConfig dtmcConfig: generatorConfig.getDtmcGeneratorConfigs()) {
