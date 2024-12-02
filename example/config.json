@@ -1,0 +1,35 @@
+{
+  "seed": null,
+  "dtmcGeneratorConfigs": [
+    {
+      "states": 4,
+      "edgesNumberDistribution": {
+        "n": 2,
+        "distributionType": "com.github.nekobanana.dtmcgenerator.generator.distribution.SingleValueDistribution"
+      },
+      "edgesLocalityDistribution": {
+        "min": -4,
+        "max": 4,
+        "distributionType": "com.github.nekobanana.dtmcgenerator.generator.distribution.UniformDistribution"
+      },
+      "selfLoopValue": null,
+      "connectSCCs": false,
+      "numberOfDTMCs": 10
+    },
+    {
+      "states": 16,
+      "edgesNumberDistribution": {
+        "n": 2,
+        "distributionType": "com.github.nekobanana.dtmcgenerator.generator.distribution.SingleValueDistribution"
+      },
+      "edgesLocalityDistribution": {
+        "min": -4,
+        "max": 4,
+        "distributionType": "com.github.nekobanana.dtmcgenerator.generator.distribution.UniformDistribution"
+      },
+      "selfLoopValue": null,
+      "connectSCCs": false,
+      "numberOfDTMCs": 10
+    }
+  ]
+}
