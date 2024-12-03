@@ -5,12 +5,12 @@
       "states": 4,
       "edgesNumberDistribution": {
         "n": 2,
-        "distributionType": "com.github.nekobanana.dtmcgenerator.generator.distribution.SingleValueDistribution"
+        "distributionType": "single_value"
       },
       "edgesLocalityDistribution": {
         "min": -4,
         "max": 4,
-        "distributionType": "com.github.nekobanana.dtmcgenerator.generator.distribution.UniformDistribution"
+        "distributionType": "uniform"
       },
       "selfLoopValue": null,
       "connectSCCs": false,
@@ -20,12 +20,12 @@
       "states": 16,
       "edgesNumberDistribution": {
         "n": 2,
-        "distributionType": "com.github.nekobanana.dtmcgenerator.generator.distribution.SingleValueDistribution"
+        "distributionType": "single_value"
       },
       "edgesLocalityDistribution": {
         "min": -4,
         "max": 4,
-        "distributionType": "com.github.nekobanana.dtmcgenerator.generator.distribution.UniformDistribution"
+        "distributionType": "uniform"
       },
       "selfLoopValue": null,
       "connectSCCs": false,
