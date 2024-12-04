@@ -11,13 +11,14 @@ import java.util.Random;
 
 public class DTMCGenerator {
     final private Random rand = RandomUtils.rand;
-    private int N;
+    private Distribution nDistribution;
     private Distribution edgesNumberDistribution;
     // una volta campionato in numero di archi uscenti uso edgesLocalityDistribution (che potrebbe essere
     // per esempio una gaussiana o una uniforme [-4, +4]) per assegnare per ogni arco verso che nodo va
     private Distribution edgesLocalityDistribution;
     private Double selfLoopValue;
     boolean connectSCC;
+    Integer N;
 
 
     public Matrix getMatrix() {
@@ -93,6 +94,7 @@ public class DTMCGenerator {
         if (selfLoopProbabilitySetByUser && !checkSelfLoopCompatibility()) {
             throw new RuntimeException("Self loop value should be less than 1");
         }
+        this.N = nDistribution.getSample();
         Matrix P = Matrix.zero(N, N);
         for (int r = 0; r < N; r++) {
             int nEdges = edgesNumberDistribution.getSample();
@@ -132,10 +134,14 @@ public class DTMCGenerator {
     }
 
     private boolean checkNotNullInputs() {
-        return N > 0 &&
-                this.edgesNumberDistribution != null && this.edgesLocalityDistribution != null;
+        return this.nDistribution != null &&
+                this.edgesNumberDistribution != null &&
+                this.edgesLocalityDistribution != null;
     }
 
+    public void setnDistribution(Distribution nDistribution) {
+        this.nDistribution = nDistribution;
+    }
 
     public void setConnectSCC(boolean connectSCC) {
         this.connectSCC = connectSCC;
@@ -153,12 +159,8 @@ public class DTMCGenerator {
         this.edgesNumberDistribution = edgesNumberDistribution;
     }
 
-    public void setN(int n) {
-        N = n;
-    }
-
     private boolean checkDistributionsCompatibility() {
-        return edgesNumberDistribution.getMin() <= Math.min(edgesLocalityDistribution.getIntervalLength(), N);
+        return edgesNumberDistribution.getMin() <= Math.min(edgesLocalityDistribution.getIntervalLength(), nDistribution.getMin());
         // non tiene conto di cose strane che potrebbero succedere nella ManualDistribution,
         // tipo intervalli che si sovrappongono
     }

@@ -60,12 +60,10 @@ public class Main {
 
         int matCounter = 0;
         for (DTMCConfig dtmcConfig: generatorConfig.getDtmcGeneratorConfigs()) {
-            int N = dtmcConfig.getStates();
-            System.out.println("Generating matrix...");
             DTMCGenerator dtmcGenerator = new DTMCGenerator();
             dtmcGenerator.setEdgesNumberDistribution(dtmcConfig.getEdgesNumberDistribution());
             dtmcGenerator.setEdgesLocalityDistribution(dtmcConfig.getEdgesLocalityDistribution());
-            dtmcGenerator.setN(N);
+            dtmcGenerator.setnDistribution(dtmcConfig.getStatesNumberDistribution());
             for (int i = 0; i < dtmcConfig.getNumberOfDTMCs(); i++) {
                 Matrix P = dtmcGenerator.getMatrix();
                 writeDTMCToFile(P, Paths.get(outputDirPath, matCounter++ + ".json").toString());

@@ -3,19 +3,19 @@ package com.github.nekobanana.dtmcgenerator.config.dtmcgenerator;
 import com.github.nekobanana.dtmcgenerator.generator.distribution.Distribution;
 
 public class DTMCConfig {
-    private int states;
+    private Distribution statesNumberDistribution;
     private Distribution edgesNumberDistribution;
     private Distribution edgesLocalityDistribution;
     private Double selfLoopValue;
     private boolean connectSCCs;
     private int numberOfDTMCs;
 
-    public int getStates() {
-        return states;
+    public Distribution getStatesNumberDistribution() {
+        return statesNumberDistribution;
     }
 
-    public void setStates(int states) {
-        this.states = states;
+    public void setStatesNumberDistribution(Distribution statesNumberDistribution) {
+        this.statesNumberDistribution = statesNumberDistribution;
     }
 
     public Distribution getEdgesNumberDistribution() {

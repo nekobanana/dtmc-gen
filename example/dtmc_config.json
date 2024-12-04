@@ -2,7 +2,10 @@
   "seed": null,
   "dtmcGeneratorConfigs": [
     {
-      "states": 4,
+      "statesNumberDistribution": {
+        "n": 4,
+        "distributionType": "single_value"
+      },
       "edgesNumberDistribution": {
         "n": 2,
         "distributionType": "single_value"
@@ -17,7 +20,10 @@
       "numberOfDTMCs": 10
     },
     {
-      "states": 16,
+      "statesNumberDistribution": {
+        "n": 16,
+        "distributionType": "single_value"
+      },
       "edgesNumberDistribution": {
         "n": 2,
         "distributionType": "single_value"
