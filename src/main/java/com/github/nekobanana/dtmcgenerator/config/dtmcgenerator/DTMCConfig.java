@@ -1,4 +1,4 @@
-package com.github.nekobanana.dtmcgenerator.config;
+package com.github.nekobanana.dtmcgenerator.config.dtmcgenerator;
 
 import com.github.nekobanana.dtmcgenerator.generator.distribution.Distribution;
 

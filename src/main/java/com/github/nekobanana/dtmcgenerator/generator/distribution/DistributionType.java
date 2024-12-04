@@ -5,5 +5,4 @@ public class DistributionType {
     public static final String UNIFORM = "uniform";
     public static final String MANUAL = "manual";
 
-
 }

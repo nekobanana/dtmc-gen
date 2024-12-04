@@ -21,26 +21,18 @@ public class PerfectSampleRunner implements SamplerRunner {
     private Float avgSteps;
     private Double stdDevSteps;
     private int minSamplesNumber = 2;
+    private StatisticalTest stopConditionTest;
 
     private static final String postprocDirPath = "postprocess/";
     private static final String outputDirPath = postprocDirPath + "results/";
-    private List<Process> outputWriteProcesses = new ArrayList<>();
 
-    public PerfectSampleRunner(PerfectSampler sampler) {
+    public PerfectSampleRunner(PerfectSampler sampler, StatisticalTest stopConditionTest) {
         this.sampler = sampler;
+        this.stopConditionTest = stopConditionTest;
     }
 
     @Override
-    public void run(int runs) {
-        avgSteps = null;
-        stdDevSteps = null;
-        for (int i = 0; i < runs; i++) {
-            sampler.reset();
-            results.add(sampler.runUntilCoalescence());
-        }
-    }
-
-    public int run(StatisticalTest stopConditionTest) {
+    public void run() {
         avgSteps = null;
         stdDevSteps = null;
         for (int i = 0; i < minSamplesNumber; i++) {
@@ -55,12 +47,10 @@ public class PerfectSampleRunner implements SamplerRunner {
             results.add(result);
             stopConditionTest.addNewSample(result.getSteps());
         } while (!stopConditionTest.test());
-        return results.size();
+//        return results.size();
     }
 
-    @Override
     public Map<Integer, Double> getStatesDistribution() {return getStatesDistribution(false);}
-    @Override
     public Map<Integer, Double> getStatesDistribution(boolean print) {
         Map<Integer, Double> pi = SamplerRunner.getDistrFromResults(results, RunResult::getSampledState)
                 .entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e ->  (double)e.getValue() / results.size()));
@@ -72,6 +62,7 @@ public class PerfectSampleRunner implements SamplerRunner {
         return pi;
     }
 
+    @Override
     public Map<Integer, Long> getStepsDistribution() {return getStepsDistribution(false);}
     public Map<Integer, Long> getStepsDistribution(boolean print) {
         Map<Integer, Long> hist = SamplerRunner.getDistrFromResults(results, RunResult::getSteps);

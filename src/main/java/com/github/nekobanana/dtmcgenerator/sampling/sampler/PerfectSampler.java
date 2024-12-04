@@ -1,6 +1,7 @@
 package com.github.nekobanana.dtmcgenerator.sampling.sampler;
 
 import com.github.nekobanana.dtmcgenerator.sampling.sampler.random.RandomHelper;
+import com.github.nekobanana.dtmcgenerator.sampling.sampler.random.RandomHelperType;
 import org.la4j.Matrix;
 
 import java.io.BufferedWriter;
@@ -19,14 +20,14 @@ public class PerfectSampler extends Sampler {
     private int keepSequenceLength = 2;
     private final RandomHelper randomHelper;
 
-    public PerfectSampler(Matrix P, Class<? extends RandomHelper> randomHelperClass, boolean keepSequence) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+    public PerfectSampler(Matrix P, RandomHelperType randomHelperType, boolean keepSequence) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         super(P);
         this.keepSequence = keepSequence;
-        this.randomHelper = randomHelperClass.getConstructor(Random.class, int.class).newInstance(rand, n);
+        this.randomHelper = RandomHelper.getRandomHelper(randomHelperType, rand, n);
     }
 
-    public PerfectSampler(Matrix P, Class<? extends RandomHelper> randomHelperClass) throws InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        this(P, randomHelperClass, false);
+    public PerfectSampler(Matrix P, RandomHelperType randomHelperType) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+        this(P, randomHelperType, false);
     }
 
     @Override

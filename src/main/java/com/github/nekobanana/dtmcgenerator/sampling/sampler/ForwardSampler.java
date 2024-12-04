@@ -1,6 +1,7 @@
 package com.github.nekobanana.dtmcgenerator.sampling.sampler;
 
 import com.github.nekobanana.dtmcgenerator.sampling.sampler.random.RandomHelper;
+import com.github.nekobanana.dtmcgenerator.sampling.sampler.random.RandomHelperType;
 import org.la4j.Matrix;
 
 import java.lang.reflect.InvocationTargetException;
@@ -14,9 +15,9 @@ public class ForwardSampler extends Sampler {
     private final List<StatesSnapshot> sequence = new ArrayList<>();
     private final RandomHelper randomHelper;
 
-    public ForwardSampler(Matrix P, Class<? extends RandomHelper> randomHelperClass) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
+    public ForwardSampler(Matrix P, RandomHelperType randomHelperType) throws NoSuchMethodException, InvocationTargetException, InstantiationException, IllegalAccessException {
         super(P);
-        this.randomHelper = randomHelperClass.getConstructor(Random.class, int.class).newInstance(rand, n);
+        this.randomHelper = RandomHelper.getRandomHelper(randomHelperType, rand, n);
     }
 
     @Override

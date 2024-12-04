@@ -1,6 +1,7 @@
 package com.github.nekobanana.dtmcgenerator.sampling.runner;
 
 import com.github.nekobanana.dtmcgenerator.sampling.sampler.DumbSampler;
+import org.apache.commons.lang.NotImplementedException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -9,9 +10,10 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class DumbSampleRunner implements SamplerRunner {
-    DumbSampler sampler;
-    int steps = 1;
-    List<Integer> results = new ArrayList<>();
+    private DumbSampler sampler;
+    private int steps = 1;
+    private List<Integer> results = new ArrayList<>();
+    private int runs;
 
     public DumbSampleRunner(DumbSampler sampler) {
         this.sampler = sampler;
@@ -22,7 +24,7 @@ public class DumbSampleRunner implements SamplerRunner {
     }
 
     @Override
-    public void run(int runs) {
+    public void run() {
         int r;
         int initialState = 0;
         for (int i = 0; i < runs; i++) {
@@ -34,8 +36,11 @@ public class DumbSampleRunner implements SamplerRunner {
     }
 
     @Override
+    public Map<Integer, Long> getStepsDistribution() {
+        throw new NotImplementedException();
+    }
+
     public Map<Integer, Double> getStatesDistribution() {return this.getStatesDistribution(false);}
-    @Override
     public Map<Integer, Double> getStatesDistribution(boolean print) {
         Map<Integer, Double> pi = SamplerRunner.getDistrFromResults(results, Function.identity())
                 .entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e -> (double)e.getValue() / results.size()));
@@ -45,5 +50,13 @@ public class DumbSampleRunner implements SamplerRunner {
             pi.forEach((state, count) -> System.out.println("state " + state + ": " + count));
         }
         return pi;
+    }
+
+    public void setRuns(int runs) {
+        this.runs = runs;
+    }
+
+    public int getRuns() {
+        return runs;
     }
 }

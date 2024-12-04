@@ -1,4 +1,4 @@
-package com.github.nekobanana.dtmcgenerator.config;
+package com.github.nekobanana.dtmcgenerator.config.dtmcgenerator;
 
 import java.util.ArrayList;
 import java.util.List;

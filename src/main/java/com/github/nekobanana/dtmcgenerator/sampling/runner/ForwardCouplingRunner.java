@@ -30,25 +30,17 @@ public class ForwardCouplingRunner implements SamplerRunner {
     }
 
     @Override
-    public void run(int runs) {
+    public void run() {
         avgSteps = null;
         stdDevSteps = null;
         Combinations couples = new Combinations(coupler.getN(), 2);
-        Iterator<int[]> couplesIt = couples.iterator();
-//        for (int i = 0; i < runs; i++) {
         for (int[] pair : couples) {
             coupler.reset();
-//            if (!couplesIt.hasNext()) {
-//                couplesIt = couples.iterator();
-//            }
-//            int[] pair=couplesIt.next();
             results.add(coupler.runUntilCoalescence(pair[0], pair[1]));
         }
     }
 
-    @Override
     public Map<Integer, Double> getStatesDistribution() {return getStatesDistribution(false);}
-    @Override
     public Map<Integer, Double> getStatesDistribution(boolean print) {
         Map<Integer, Double> pi = SamplerRunner.getDistrFromResults(results, RunResult::getSampledState)
                 .entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, e ->  (double)e.getValue() / results.size()));
@@ -84,14 +76,6 @@ public class ForwardCouplingRunner implements SamplerRunner {
             stdDevSteps = Math.sqrt(results.stream()
                     .mapToDouble(r -> Math.pow(r.getSteps() - avgSteps, 2)).sum() / (results.size() - 1));
         return stdDevSteps;
-    }
-
-    public void writeResultsOutput(String dirName) throws IOException {
-        Files.createDirectories(Paths.get(outputDirPath + dirName));
-        String outputFileName = outputDirPath + dirName + "/results_forward_coupling.json";
-        BufferedWriter writer = new BufferedWriter(new FileWriter(outputFileName));
-        writer.write((new ObjectMapper()).writerWithDefaultPrettyPrinter().writeValueAsString(results));
-        writer.close();
     }
 
     public double[] getResultsSteps() {

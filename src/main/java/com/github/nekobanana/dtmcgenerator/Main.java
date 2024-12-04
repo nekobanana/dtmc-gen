@@ -1,97 +1,48 @@
 package com.github.nekobanana.dtmcgenerator;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.nekobanana.dtmcgenerator.config.DTMCConfig;
-import com.github.nekobanana.dtmcgenerator.config.DTMCGeneratorConfig;
-import com.github.nekobanana.dtmcgenerator.config.OutputDTMC;
+import com.github.nekobanana.dtmcgenerator.config.dtmcgenerator.DTMCConfig;
+import com.github.nekobanana.dtmcgenerator.config.dtmcgenerator.DTMCGeneratorConfig;
+import com.github.nekobanana.dtmcgenerator.config.dtmcgenerator.OutputDTMC;
+import com.github.nekobanana.dtmcgenerator.config.labelgenerator.SamplingConfig;
 import com.github.nekobanana.dtmcgenerator.generator.DTMCGenerator;
-import com.github.nekobanana.dtmcgenerator.sampling.MethodEnum;
+import com.github.nekobanana.dtmcgenerator.sampling.runner.SamplerRunner;
 import com.github.nekobanana.dtmcgenerator.utils.RandomUtils;
 import org.apache.commons.cli.*;
 import org.apache.commons.io.FilenameUtils;
 import org.la4j.Matrix;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.file.NotDirectoryException;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Random;
 
 public class Main {
     static Long seed;
 
-    public static void main(String[] args) throws ParseException, IOException {
-        Options options = new Options();
-        Option labels = new Option("l", "labels", false, "generate labels");
-        options.addOption(labels);
-        Option dtmcs = new Option("d", "dtmcs", false, "generate DTMCs");
-        options.addOption(dtmcs);
-        Option config = new Option("c", "config-file", true, "input config file");
-        config.setRequired(true);
-        config.setArgName("file");
-        options.addOption(config);
-        Option input = new Option("i", "input-dir", true, "input directory containing DTMC files");
-        input.setArgName("directory");
-        options.addOption(input);
-        Option output = new Option("o", "output-dir", true, "output directory for DTMCs with '--dtmcs' flag and for labels with '--labels' flag");
-        output.setRequired(true);
-        output.setArgName("directory");
-        options.addOption(output);
+    public static void main(String[] args) throws IOException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        CommandLine cmd = CliHelper.parseCLIArgs(args);
 
-        CommandLineParser parser = new DefaultParser();
-        HelpFormatter formatter = new HelpFormatter();
-        CommandLine cmd = null;
-
-        try {
-            cmd = parser.parse(options, args);
-            boolean hasLabels = cmd.hasOption("labels");
-            boolean hasDtmcs = cmd.hasOption("dtmcs");
-            if (!hasLabels && !hasDtmcs) {
-                throw new ParseException("You must specify either --labels or --dtmcs.");
-            }
-            if (hasLabels && hasDtmcs) {
-                throw new ParseException("--labels and --dtmcs are mutually exclusive.");
-            }
-            if (hasLabels && !cmd.hasOption("input-dir")) {
-                throw new ParseException("--labels requires --input-dir.");
-            }
-            if (hasDtmcs && cmd.hasOption("input-dir")) {
-                throw new ParseException("--input-dir cannot be used with --dtmcs.");
-            }
-        } catch (ParseException e) {
-            System.err.println("Error: " + e.getMessage());
-            System.out.println();
-            printHelp(formatter, options);
-            System.exit(1);
-        }
-        if (!cmd.hasOption("config") && !cmd.hasOption("dtmcs-dir")) {
-            throw new ParseException("Missing input config or input DTMCs dir options");
-        }
-        if (cmd.hasOption("config")) {
-            if (!cmd.hasOption("dtmcs-dir")) {
-                throw new ParseException("Missing output DTMCs dir option");
-            }
-            String configFilePath = cmd.getOptionValue("config");
-            String outputDirPath = cmd.getOptionValue("dtmcs-dir");
+        if (cmd.hasOption("dtmcs")) {
+            String configFilePath = cmd.getOptionValue("c");
+            String outputDirPath = cmd.getOptionValue("o");
             generateDTMCs(configFilePath, outputDirPath);
         }
-        if (cmd.hasOption("dtmcs-dir")) {
-            if (!cmd.hasOption("labels-dir")) {
-                throw new ParseException("Missing output labels dir option");
-            }
-            String inputDirPath = cmd.getOptionValue("dtmcs-dir");
-            String outputDirPath = cmd.getOptionValue("labels-dir");
-            MethodEnum methodEnum = MethodEnum.fromString(cmd.getOptionValue("method"));
-            generateLabels(inputDirPath, outputDirPath, methodEnum);
+        else if (cmd.hasOption("labels")) {
+            String configFilePath = cmd.getOptionValue("c");
+            String inputDirPath = cmd.getOptionValue("i");
+            String outputDirPath = cmd.getOptionValue("o");
+            generateLabels(configFilePath, inputDirPath, outputDirPath);
         }
-
     }
 
     private static void generateDTMCs(String configFilePath, String outputDirPath) throws IOException {
-        DTMCGeneratorConfig generatorConfig = new ObjectMapper().readValue(new File(configFilePath), DTMCGeneratorConfig.class);
+        File configFile = new File(configFilePath);
+        if (!configFile.exists()) {
+            throw new FileNotFoundException("Can't find file " + configFilePath);
+        }
+        DTMCGeneratorConfig generatorConfig = new ObjectMapper().readValue(configFile, DTMCGeneratorConfig.class);
 
         if (generatorConfig.getSeed() != null) {
             seed = generatorConfig.getSeed();
@@ -122,7 +73,13 @@ public class Main {
         }
     }
 
-    private static void generateLabels(String inputDirPath, String outputDirPath, MethodEnum method) throws IOException {
+    private static void generateLabels(String configFilePath, String inputDirPath, String outputDirPath) throws IOException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        File configFile = new File(configFilePath);
+        if (!configFile.exists()) {
+            throw new FileNotFoundException("Can't find file " + configFilePath);
+        }
+
+        SamplingConfig samplingConfig = new ObjectMapper().readValue(configFile, SamplingConfig.class);
         File dir = new File(inputDirPath);
         File[] directoryListing = dir.listFiles();
         ObjectMapper objectMapper = new ObjectMapper();
@@ -131,12 +88,13 @@ public class Main {
                 OutputDTMC oDtmc = objectMapper.readValue(dtmcFile, OutputDTMC.class);
                 RandomUtils.setSeed(oDtmc.getNextStepSeed());
                 Matrix P = Matrix.from2DArray(oDtmc.getDtmc());
-
+                SamplerRunner runner = ConfigSamplingHelper.getSamplerRunner(samplingConfig, P);
+                runner.run();
+                writeObjectToFile(runner.getStepsDistribution(), Paths.get(outputDirPath, dtmcFile.getName()).toString());
             }
         } else {
             throw new NotDirectoryException(inputDirPath + " is not a directory");
         }
-
     }
 
     public static void writeDTMCToFile(Matrix P, String filePath) throws IOException {
@@ -160,31 +118,5 @@ public class Main {
         }
         return result;
     }
-    private static void printHelp(HelpFormatter formatter, Options options) {
-        String header = """
-                SYNTAX:
-                    dtmc-gen [OPTIONS]
-                
-                REQUIRED OPTIONS:
-                    -c, --config-file <file>    Specifies the configuration file.
-                    -o, --output-dir <directory>
-                                              Specifies the output directory. Required for all executions.
 
-                MUTUALLY EXCLUSIVE OPTIONS:
-                    -l, --labels               Generates labels. Requires --input-dir.
-                    -d, --dtmcs                Generates DTMCs. Cannot be used with --input-dir.
-
-                OPTIONAL (CONDITIONAL) OPTIONS:
-                    -i, --input-dir <directory>
-                                              Specifies the input directory containing DTMC files. Required only with --labels.
-
-                EXAMPLES:
-                    Generate DTMCs:
-                        dtmc-gen --dtmcs --config-file dtmc_config.json --output-dir dtmcs/
-                    Generate labels:
-                        dtmc-gen --labels --config-file label_config.json --input-dir dtmcs/ --output-dir labels/
-                """;
-        System.out.println(header);
-//        formatter.printHelp(syntax, header, new Options(), "Notes: At least one of --labels or --dtmcs must be specified. --input-dir cannot be used with --dtmcs.");
-    }
 }

@@ -9,7 +9,6 @@ public interface SamplerRunner {
     static <T> Map<Integer, Long> getDistrFromResults(List<T> results, Function<? super T, Integer> function) {
         return results.stream().collect(Collectors.groupingBy(function, Collectors.counting()));
     }
-    void run(int runs);
-    Map<Integer, Double> getStatesDistribution();
-    Map<Integer, Double> getStatesDistribution(boolean print);
+    void run();
+    Map<Integer, Long> getStepsDistribution();
 }

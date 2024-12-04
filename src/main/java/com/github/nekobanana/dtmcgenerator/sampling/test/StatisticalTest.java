@@ -1,11 +1,7 @@
 package com.github.nekobanana.dtmcgenerator.sampling.test;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import org.apache.commons.lang3.NotImplementedException;
 
-@JsonIgnoreProperties(ignoreUnknown = true)
-@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 public abstract class StatisticalTest {
     protected String name;
     protected double confidence;
@@ -90,4 +86,12 @@ public abstract class StatisticalTest {
         return maxError;
     }
 
+
+    public static StatisticalTest getStatisticalTest(TestType testType) {
+        return switch (testType) {
+            case STUDENT_T_TEST -> new StudentTTest();
+            case Z_TEST -> new ZTest();
+            case MODIFIED_Z_TEST -> new ModifiedZTest();
+        };
+    }
 }

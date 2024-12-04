@@ -11,22 +11,21 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
-public class ForwardSampleRunner {
+public class ForwardSampleRunner implements SamplerRunner{
     private ForwardSampler sampler;
     private List<RunResult> results = new ArrayList<>();
     private Float avgSteps;
     private Double stdDevSteps;
-
-    private static final String postprocDirPath = "postprocess/";
-    private static final String outputDirPath = postprocDirPath + "results/";
-    private List<Process> outputWriteProcesses = new ArrayList<>();
+    private int runs;
 
     public ForwardSampleRunner(ForwardSampler sampler) {
         this.sampler = sampler;
     }
 
-    public void run(int runs) {
+    @Override
+    public void run() {
         avgSteps = null;
         stdDevSteps = null;
         for (int i = 0; i < runs; i++) {
@@ -35,12 +34,16 @@ public class ForwardSampleRunner {
         }
     }
 
-    public void writeResultsOutput(String dirName) throws IOException {
-        Files.createDirectories(Paths.get(outputDirPath + dirName));
-        String outputFileName = outputDirPath + dirName + "/results_forward.json";
-        BufferedWriter writer = new BufferedWriter(new FileWriter(outputFileName));
-        writer.write((new ObjectMapper()).writerWithDefaultPrettyPrinter().writeValueAsString(results));
-        writer.close();
+    @Override
+    public Map<Integer, Long> getStepsDistribution() {return getStepsDistribution(false);}
+    public Map<Integer, Long> getStepsDistribution(boolean print) {
+        Map<Integer, Long> hist = SamplerRunner.getDistrFromResults(results, RunResult::getSteps);
+        if (print) {
+            System.out.println("\nPerfect sampling");
+            hist.forEach((state, count) ->
+                    System.out.println("steps: " + state + ", count: " + count));
+        }
+        return hist;
     }
 
     public Float getAvgSteps() {
@@ -53,7 +56,11 @@ public class ForwardSampleRunner {
                 .mapToDouble(r -> Math.pow(r.getSteps() - avgSteps, 2)).sum() / (results.size() - 1));
         return stdDevSteps;
     }
-    public int getNRuns() {
-        return results.size();
+    public int getRuns() {
+        return runs;
+    }
+
+    public void setRuns(int runs) {
+        this.runs = runs;
     }
 }
