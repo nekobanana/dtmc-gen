@@ -1,6 +1,5 @@
 package com.github.nekobanana.dtmcgenerator.config.labelgenerator;
 
-import com.github.nekobanana.dtmcgenerator.sampling.sampler.random.RandomHelper;
 import com.github.nekobanana.dtmcgenerator.sampling.sampler.random.RandomHelperType;
 
 public class ForwardSamplingConfig extends SamplingConfig {

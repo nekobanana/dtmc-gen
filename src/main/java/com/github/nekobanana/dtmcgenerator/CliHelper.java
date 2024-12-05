@@ -5,6 +5,7 @@ import org.apache.commons.cli.*;
 public class CliHelper {
     private static void printHelp(HelpFormatter formatter, Options options) {
         String header = """
+                Usage:
                     dtmc-gen [OPTIONS]
                 
                 Operation mode (mutually exclusive, required):
@@ -35,16 +36,16 @@ public class CliHelper {
         Option dtmcs = new Option("d", "dtmcs", false, "generate DTMCs");
         options.addOption(dtmcs);
         Option config = new Option("c", "config-file", true, "input config file");
-        config.setRequired(true);
         config.setArgName("file");
         options.addOption(config);
         Option input = new Option("i", "input-dir", true, "input directory containing DTMC files");
         input.setArgName("directory");
         options.addOption(input);
         Option output = new Option("o", "output-dir", true, "output directory for DTMCs with '--dtmcs' flag and for labels with '--labels' flag");
-        output.setRequired(true);
         output.setArgName("directory");
         options.addOption(output);
+        Option help = new Option("h", "help", false, "generate labels");
+        options.addOption(help);
 
         CommandLineParser parser = new DefaultParser();
         HelpFormatter formatter = new HelpFormatter();
@@ -52,6 +53,12 @@ public class CliHelper {
 
         try {
             cmd = parser.parse(options, args);
+            if (cmd.hasOption("help")) {
+                System.out.println("Help menu:");
+                System.out.println();
+                printHelp(formatter, options);
+                System.exit(1);
+            }
             boolean hasLabels = cmd.hasOption("labels");
             boolean hasDtmcs = cmd.hasOption("dtmcs");
             if (!hasLabels && !hasDtmcs) {
@@ -65,6 +72,9 @@ public class CliHelper {
             }
             if (hasDtmcs && cmd.hasOption("input-dir")) {
                 throw new ParseException("--input-dir cannot be used with --dtmcs.");
+            }
+            if (!cmd.hasOption("config-file") || !cmd.hasOption("output-dir")) {
+                throw new ParseException("Missing --config-file e/or --output-dir.");
             }
         } catch (ParseException e) {
             System.err.println("Error: " + e.getMessage());
