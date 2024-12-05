@@ -75,19 +75,21 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>com.coderplus.maven.plugins</groupId>
-                <artifactId>copy-rename-maven-plugin</artifactId>
-                <version>1.0</version>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.5.0</version>
                 <executions>
                     <execution>
-                        <id>copy-file</id>
                         <phase>package</phase>
                         <goals>
-                            <goal>copy</goal>
+                            <goal>exec</goal>
                         </goals>
                         <configuration>
-                            <sourceFile>target/dtmc-gen-1.0-SNAPSHOT-jar-with-dependencies.jar</sourceFile>
-                            <destinationFile>dtmc-gen</destinationFile>
+                            <executable>/bin/bash</executable>
+                            <workingDirectory>./build_scripts</workingDirectory>
+                            <arguments>
+                                after_build_script.sh
+                            </arguments>
                         </configuration>
                     </execution>
                 </executions>
