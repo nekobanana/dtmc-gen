@@ -1,5 +1,5 @@
 {
   "samplingMethod": "forward_sampling",
-  "randomMethod": "single_random",
+  "randomMethod": "n_random",
   "runs": 1000
 }

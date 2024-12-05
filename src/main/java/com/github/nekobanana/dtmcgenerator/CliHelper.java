@@ -21,9 +21,9 @@ public class CliHelper {
 
                 Examples:
                     Generate DTMCs:
-                        dtmc-gen --dtmcs --config-file dtmc_config.json --output-dir dtmcs/
+                        dtmc-gen --dtmcs --config-file example/dtmc_config.json --output-dir example/dtmcs/
                     Generate labels:
-                        dtmc-gen --labels --config-file label_config.json --input-dir dtmcs/ --output-dir labels/
+                        dtmc-gen --labels --config-file example/label_config.json --input-dir example/dtmcs/ --output-dir example/labels/
                 """;
         System.out.println(header);
 //        formatter.printHelp(syntax, header, new Options(), "Notes: At least one of --labels or --dtmcs must be specified. --input-dir cannot be used with --dtmcs.");

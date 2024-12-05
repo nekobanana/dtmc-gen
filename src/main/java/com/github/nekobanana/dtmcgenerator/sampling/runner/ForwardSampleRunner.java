@@ -16,7 +16,7 @@ import java.util.Map;
 public class ForwardSampleRunner implements SamplerRunner{
     private ForwardSampler sampler;
     private List<RunResult> results = new ArrayList<>();
-    private Float avgSteps;
+    private Double avgSteps;
     private Double stdDevSteps;
     private int runs;
 
@@ -46,11 +46,13 @@ public class ForwardSampleRunner implements SamplerRunner{
         return hist;
     }
 
-    public Float getAvgSteps() {
-        avgSteps = (float) results.stream().mapToInt(RunResult::getSteps).sum() / results.size();
+    @Override
+    public Double getAvgSteps() {
+        avgSteps = results.stream().mapToDouble(RunResult::getSteps).sum() / results.size();
         return avgSteps;
     }
 
+    @Override
     public Double getStdDevSteps() {
         stdDevSteps = Math.sqrt(results.stream()
                 .mapToDouble(r -> Math.pow(r.getSteps() - avgSteps, 2)).sum() / (results.size() - 1));

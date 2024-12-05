@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 public class ForwardCouplingRunner implements SamplerRunner {
     private ForwardCoupler coupler;
     private List<RunResult> results = new ArrayList<>();
-    private Float avgSteps;
+    private Double avgSteps;
     private Double stdDevSteps;
 
     private static final String postprocDirPath = "postprocess/";
@@ -61,11 +61,13 @@ public class ForwardCouplingRunner implements SamplerRunner {
         return (int) Math.round(getAvgSteps() + sigmaCount * getStdDevSteps());
     }
 
-    public Float getAvgSteps() {
-            avgSteps = (float) results.stream().mapToInt(RunResult::getSteps).sum() / results.size();
+    @Override
+    public Double getAvgSteps() {
+            avgSteps = results.stream().mapToDouble(RunResult::getSteps).sum() / results.size();
         return avgSteps;
     }
 
+    @Override
     public Double getStdDevSteps() {
             stdDevSteps = Math.sqrt(results.stream()
                     .mapToDouble(r -> Math.pow(r.getSteps() - avgSteps, 2)).sum() / (results.size() - 1));

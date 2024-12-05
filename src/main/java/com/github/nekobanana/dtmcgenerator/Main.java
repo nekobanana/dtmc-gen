@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.nekobanana.dtmcgenerator.config.dtmcgenerator.DTMCConfig;
 import com.github.nekobanana.dtmcgenerator.config.dtmcgenerator.DTMCGeneratorConfig;
 import com.github.nekobanana.dtmcgenerator.config.dtmcgenerator.OutputDTMC;
+import com.github.nekobanana.dtmcgenerator.config.labelgenerator.OutputSampling;
 import com.github.nekobanana.dtmcgenerator.config.labelgenerator.SamplingConfig;
 import com.github.nekobanana.dtmcgenerator.generator.DTMCGenerator;
 import com.github.nekobanana.dtmcgenerator.sampling.runner.SamplerRunner;
@@ -89,7 +90,11 @@ public class Main {
                 Matrix P = Matrix.from2DArray(oDtmc.getDtmc());
                 SamplerRunner runner = ConfigSamplingHelper.getSamplerRunner(samplingConfig, P);
                 runner.run();
-                writeObjectToFile(runner.getStepsDistribution(), Paths.get(outputDirPath, dtmcFile.getName()).toString());
+                OutputSampling outputSampling = new OutputSampling();
+                outputSampling.setDistribution(runner.getStepsDistribution());
+                outputSampling.setMean(runner.getAvgSteps());
+                outputSampling.setStdDev(runner.getStdDevSteps());
+                writeObjectToFile(outputSampling, Paths.get(outputDirPath, dtmcFile.getName()).toString());
             }
         } else {
             throw new NotDirectoryException(inputDirPath + " is not a directory");

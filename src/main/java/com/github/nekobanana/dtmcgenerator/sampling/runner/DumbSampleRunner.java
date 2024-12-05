@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
-public class DumbSampleRunner implements SamplerRunner {
+public class DumbSampleRunner {
     private DumbSampler sampler;
     private int steps = 1;
     private List<Integer> results = new ArrayList<>();
@@ -23,7 +23,6 @@ public class DumbSampleRunner implements SamplerRunner {
         return this;
     }
 
-    @Override
     public void run() {
         int r;
         int initialState = 0;
@@ -35,7 +34,6 @@ public class DumbSampleRunner implements SamplerRunner {
         }
     }
 
-    @Override
     public Map<Integer, Long> getStepsDistribution() {
         throw new NotImplementedException();
     }

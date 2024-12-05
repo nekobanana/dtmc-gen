@@ -1,5 +1,7 @@
 package com.github.nekobanana.dtmcgenerator.sampling.runner;
 
+import com.github.nekobanana.dtmcgenerator.sampling.sampler.RunResult;
+
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -11,4 +13,6 @@ public interface SamplerRunner {
     }
     void run();
     Map<Integer, Long> getStepsDistribution();
+    Double getAvgSteps();
+    Double getStdDevSteps();
 }
