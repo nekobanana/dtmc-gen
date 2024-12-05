@@ -21,6 +21,12 @@ In `--labels` mode three arguments must be provided:
 - `--input-dir` followed by the path of the input folder with the DTMC files generated in the first step
 - `--output-dir` followed by the path of the output folder where the DTMC files will be stored
 
+Examples:
+    Generate DTMCs:
+        dtmc-gen --dtmcs --config-file example/dtmc_config.json --output-dir example/dtmcs/
+    Generate labels:
+        dtmc-gen --labels --config-file example/label_config_ps.json --input-dir example/dtmcs/ --output-dir example/labels/
+
 In order to get a help menu with usage description run `dtmc-gen --help`
 
 ## Configuration files
