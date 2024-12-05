@@ -5,23 +5,20 @@ import org.apache.commons.cli.*;
 public class CliHelper {
     private static void printHelp(HelpFormatter formatter, Options options) {
         String header = """
-                SYNTAX:
                     dtmc-gen [OPTIONS]
                 
-                REQUIRED OPTIONS:
-                    -c, --config-file <file>    Specifies the configuration file.
-                    -o, --output-dir <directory>
-                                              Specifies the output directory. Required for all executions.
-
-                MUTUALLY EXCLUSIVE OPTIONS:
+                Operation mode (mutually exclusive, required):
                     -l, --labels               Generates labels. Requires --input-dir.
                     -d, --dtmcs                Generates DTMCs. Cannot be used with --input-dir.
 
-                OPTIONAL (CONDITIONAL) OPTIONS:
+                Required options:
+                    -c, --config-file <file>    Specifies the configuration file.
+                    -o, --output-dir <directory>
+                                              Specifies the output directory. Required for all executions.
                     -i, --input-dir <directory>
-                                              Specifies the input directory containing DTMC files. Required only with --labels.
+                                              Only with --labels flag. Specifies the input directory containing DTMC files.
 
-                EXAMPLES:
+                Examples:
                     Generate DTMCs:
                         dtmc-gen --dtmcs --config-file dtmc_config.json --output-dir dtmcs/
                     Generate labels:

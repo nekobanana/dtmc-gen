@@ -1,7 +1,7 @@
 package com.github.nekobanana.dtmcgenerator.sampling.runner;
 
 import com.github.nekobanana.dtmcgenerator.sampling.sampler.DumbSampler;
-import org.apache.commons.lang.NotImplementedException;
+import org.apache.commons.lang3.NotImplementedException;
 
 import java.util.ArrayList;
 import java.util.List;

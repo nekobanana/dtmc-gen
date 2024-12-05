@@ -1,20 +1,14 @@
 package com.github.nekobanana.dtmcgenerator.sampling.runner;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.nekobanana.dtmcgenerator.sampling.sampler.ForwardCoupler;
 import com.github.nekobanana.dtmcgenerator.sampling.sampler.RunResult;
 import org.apache.commons.math3.util.Combinations;
 
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+
 
 public class ForwardCouplingRunner implements SamplerRunner {
     private ForwardCoupler coupler;

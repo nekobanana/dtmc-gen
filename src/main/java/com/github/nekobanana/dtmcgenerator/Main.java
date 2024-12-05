@@ -35,6 +35,7 @@ public class Main {
             String outputDirPath = cmd.getOptionValue("o");
             generateLabels(configFilePath, inputDirPath, outputDirPath);
         }
+        System.out.println("Ok");
     }
 
     private static void generateDTMCs(String configFilePath, String outputDirPath) throws IOException {
@@ -104,6 +105,7 @@ public class Main {
     }
 
     public static void writeObjectToFile(Object object, String fileName) throws IOException {
+        new File(FilenameUtils.getPath(fileName)).mkdirs();
         BufferedWriter writer = new BufferedWriter(new FileWriter(fileName));
         writer.write(new ObjectMapper().writerWithDefaultPrettyPrinter().writeValueAsString(object));
         writer.close();
