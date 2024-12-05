@@ -4,6 +4,8 @@ This tool can generate a dataset with:
 * **labels**: time step distribution of multiple Perfect Sampling (or others) executions for each DTMC
 
 ## Usage
+Note: in order to run the tool use `java -jar dtmc-gen` or `chmod +x dtmc-gen` and then `./dtmc-gen`
+
 The tool can operate in two different modes:
 - `--dtmcs`: for generating DTMCs (**first step**).
 
