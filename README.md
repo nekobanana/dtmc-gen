@@ -5,30 +5,30 @@ This tool can generate a dataset with:
 
 ## Usage
 The tool can operate in two different modes:
-- `--dtmcs`: for generating DTMCs (first step).
+- `--dtmcs`: for generating DTMCs (**first step**).
 
-  The output of this phase is a list of json files named by a progressive number that will be one of the input for the second phase.
-- `--labels`: for generating the distributions (second step).
+  The output of this phase is a list of json files named by a progressive number that will constitute part of the input for the second phase.
+- `--labels`: for generating the distributions (**second step**).
 
-  The output of this phase is a list of json files named in the same way as the input files with information about the generated time step distribution for every DTMC file.
+  The output of this phase is a list of json files named the same way as the input files with information about the generated time step distribution for every DTMC file.
 
 ### First step
-In `--dtmcs` mode two arguments must be provided:
+In `--dtmcs` mode two options must be provided:
 - `--config-file ` followed by the path of the configuration file (see [Configuration - first step](#configuration---first-step---dtmcs))
-- `--output-dir` followed by the path of the output folder where the DTMC files will be stored
+- `--output-dir` followed by the path of the folder where the DTMC files will be stored
 
-### Second step
-In `--labels` mode three arguments must be provided:
-- `--config-file ` followed by the path of the configuration file (see [Configuration - second step](#configuration---second-step---labels))
-- `--input-dir` followed by the path of the input folder with the DTMC files generated in the first step
-- `--output-dir` followed by the path of the output folder where the DTMC files will be stored
-
-Examples:
-- Generate DTMCs:
+Example:
  
         ./dtmc-gen --dtmcs --config-file example/dtmc_config.json --output-dir example/dtmcs/
-- Generate labels:
   
+### Second step
+In `--labels` mode three options must be provided:
+- `--config-file ` followed by the path of the configuration file (see [Configuration - second step](#configuration---second-step---labels))
+- `--input-dir` followed by the path of the folder containing the DTMC files generated in the first step
+- `--output-dir` followed by the path of the folder where the output files with the time step distributions will be stored
+
+Example:
+ 
         ./dtmc-gen --labels --config-file example/label_config_ps.json --input-dir example/dtmcs/ --output-dir example/labels/
 
 In order to get a help menu with usage description run `./dtmc-gen --help`
